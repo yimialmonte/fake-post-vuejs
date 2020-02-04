@@ -48,14 +48,15 @@
 </template>
 
 <script>
-import dataSource from "../../src/data.json";
+import axios from 'axios';
 export default {
   name: "HelloWorld",
   data() {
     return {
       msg: "Welcome to Your Vue.js App",
-      posts: dataSource,
-      postType: []
+      posts: [],
+      postType: [],
+      dataSource: null
     };
   },
   computed: {
@@ -65,13 +66,13 @@ export default {
       let even = [];
       let odd = [];
       if (this.postType.findIndex(e => e === "even") !== -1) {
-        even = dataSource.filter(function(post) {
+        even = this.dataSource.filter(function(post) {
           return post.id % 2 === 0;
         });
       }
 
       if (this.postType.findIndex(e => e === "odd") !== -1) {
-        odd = dataSource.filter(function(post) {
+        odd = this.dataSource.filter(function(post) {
           return post.id % 2 !== 0;
         });
       }
@@ -87,11 +88,20 @@ export default {
       post.title = post.title.substring(0, 20) + "...";
       post.body = post.body.substring(0, 50) + "...";
     }
+  },
+  created: function() {
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then(respose => {
+        this.dataSource = respose.data;
+        this.posts = respose.data;
+      })
+      .catch(error => console.log(error))
+
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1,
 h2 {
