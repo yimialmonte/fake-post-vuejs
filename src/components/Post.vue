@@ -35,7 +35,6 @@
 import axios from "axios";
 import FormCheck from "./FormCheck";
 export default {
-  name: "HelloWorld",
   components: {
     FormCheck
   },
