@@ -1,23 +1,7 @@
 <template>
   <div class="row">
     <div class="col-sm-12">
-      <div class="form-check form-check-inline">
-        <label class="form-check-label" for></label>
-        <input
-          type="checkbox"
-          class="form-check-input"
-          name="typePost"
-          value="even"
-          v-model="postType"
-        /> Even
-        <input
-          type="checkbox"
-          class="form-check-input"
-          name="typePost"
-          value="odd"
-          v-model="postType"
-        /> Odd
-      </div>
+      <FormCheck @postTypeChange="postType = $event" />
       <table class="table" v-if="postType.length > 0">
         <thead>
           <tr>
@@ -48,31 +32,34 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import FormCheck from "./FormCheck";
 export default {
   name: "HelloWorld",
+  components: {
+    FormCheck
+  },
   data() {
     return {
-      msg: "Welcome to Your Vue.js App",
       posts: [],
-      postType: [],
-      dataSource: null
+      postType: []
     };
   },
   computed: {
     postToShow: function() {
       if (this.postType.length === 0) return [];
-      let postShow = [];
+
       let even = [];
       let odd = [];
+
       if (this.postType.findIndex(e => e === "even") !== -1) {
-        even = this.dataSource.filter(function(post) {
+        even = this.posts.filter(function(post) {
           return post.id % 2 === 0;
         });
       }
 
       if (this.postType.findIndex(e => e === "odd") !== -1) {
-        odd = this.dataSource.filter(function(post) {
+        odd = this.posts.filter(function(post) {
           return post.id % 2 !== 0;
         });
       }
@@ -93,11 +80,9 @@ export default {
     axios
       .get("https://jsonplaceholder.typicode.com/posts")
       .then(respose => {
-        this.dataSource = respose.data;
         this.posts = respose.data;
       })
-      .catch(error => console.log(error))
-
+      .catch(error => console.log(error));
   }
 };
 </script>
